@@ -28,10 +28,10 @@ def capture_frame():
         success,image = vidcap.read()
         frame_of_video = file.filename + '.jpg'
         cv2.imwrite(os.path.join(path , frame_of_video), image) 
-        ret, jpeg = cv2.imencode('.jpg', image)
-        response = make_response(jpeg.tobytes())
-        response.headers['Content-Type'] = 'image/png'
-        return response
+        #ret, jpeg = cv2.imencode('.jpg', image)
+        #response = make_response(jpeg.tobytes())
+        #response.headers['Content-Type'] = 'image/png'
+        return render_template("capture_frame.html") 
 
 
     
