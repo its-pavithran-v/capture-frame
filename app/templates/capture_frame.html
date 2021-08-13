@@ -1,18 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Capture Frame</title>
+    <title>Capture Frame</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $('#upload').on('click', function () {
+                var form_data = new FormData();
+                var ins = document.getElementById('multiFiles').files.length;
+                 
+                if(ins == 0) {
+                    $('#msg').html('<span style="color:red">Select at least one file</span>');
+                    return;
+                }
+                 
+                    form_data.append("files[]", document.getElementById('multiFiles').files[0]);
+                
+                 
+                $.ajax({
+                    url: '/upload', // point to server-side URL
+                    dataType: 'json', // what to expect back from server
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: form_data,
+                    type: 'post',
+                    success: function (response) { 
+                         $('#container').html(
+                            $('<img/>', {
+                                src: response,
+                                width: '720px',
+                                height: '360px',
+                                alt: ''
+                            })
+                        );
+                    },
+                });
+            });
+        });
+    </script>
 </head>
 <body>
-    <form action="{{url_for('capture_frame')}}" method="post" enctype = "multipart/form-data">
-      <label>Video file : </label>
-      <input type="file" name="file"/>
-      <input type="submit"/>
-    </form>
-    <br>
-    {% if img_src %}
-      <img src="{{img_src}}" width="720px" height="360px">
-    {% endif %}
+    <h2>Select Video file to upload</h2>
+    <dl>
+        <p>
+            <input type="file" id="multiFiles" name="files[]" multiple="multiple"/>
+            <button id="upload">Upload</button>
+        </p>
+        <span id="container"></span>
+    </dl>
 </body>
-</html>
